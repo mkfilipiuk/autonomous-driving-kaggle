@@ -84,11 +84,11 @@ SOLVER:
   STEPS: (30000, 60000)
   MAX_ITER: 100000
   #https://github.com/facebookresearch/Detectron/blob/master/configs/getting_started/tutorial_1gpu_e2e_faster_rcnn_R-50-FPN.yaml#L14-L30
-  IMS_PER_BATCH: 1
+  IMS_PER_BATCH: 2
   BASE_LR:   0.001
   CHECKPOINT_PERIOD : 5000
 
 TEST:
   WRITE_TO_JSON: True
-  IMS_PER_BATCH : 1
+  IMS_PER_BATCH : 2
   SCORE_THRESH_FOR_TRUTH_DETECTION: 0.5

@@ -51,7 +51,7 @@ def parse_args():
     parser.add_argument('--load_ckpt', default='.', help='checkpoint path to load', type=str)
 
     parser.add_argument('--ckpt_ignore_head', default=[], help='heads parameters will be ignored during loading')
-    parser.add_argument('--use-tensorboard', default=True, help='Use tensorflow tensorboard to log training info', action='store_true')
+    parser.add_argument('--no-tensorboard', default=False, help='Use tensorflow tensorboard to log training info', action='store_true')
 
     return parser.parse_args()
 
@@ -152,7 +152,7 @@ def main():
         cfg=cfg,
         local_rank=args.local_rank,
         distributed=args.distributed,
-        use_tensorboard=args.use_tensorboard,
+        use_tensorboard=not args.no_tensorboard,
         logger=logger,
     )
 

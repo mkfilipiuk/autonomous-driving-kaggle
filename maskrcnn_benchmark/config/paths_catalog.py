@@ -17,9 +17,9 @@ class DatasetCatalog(object):
             "dataset_dir": "/media/SSD_1TB/ApolloScape/ECCV2018_apollo/test",
         },
 
-        "Pascal3d+_train": {"dataset_dir": "/home/mateusz/datasets/PASCAL3D+_release1.1",},
-        "Pascal3d+_val": {"dataset_dir": "/home/mateusz/PASCAL3D+_release1.1",},
-        "Pascal3d+_test": {"dataset_dir": "/home/mateusz/PASCAL3D+_release1.1",},
+        "Pascal3d+_train": {"dataset_dir": "/mnt/bigdisk/datasets/PASCAL3D+_release1.1",},
+        "Pascal3d+_val": {"dataset_dir": "/mnt/bigdisk/PASCAL3D+_release1.1",},
+        "Pascal3d+_test": {"dataset_dir": "/mnt/bigdisk/PASCAL3D+_release1.1",},
 
         "kitti_instance_train": {
             "img_dir": "/media/SSD_1TB/Kitti/data_semantics/training/image_2",
