@@ -27,3 +27,8 @@ booktitle = {The IEEE Conference on Computer Vision and Pattern Recognition (CVP
 month = {June},
 year = {2019}
 ```
+# Run
+1. Copy this repository
+2. Create virtualenv and install requirements.txt
+3. Update maskrcnn_benchmark/config/paths_catalog.py with your dataset's paths
+4. Run one of prepared training, for example tools/train_pascal_3d+.py
