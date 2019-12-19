@@ -7,6 +7,12 @@ import os
 class DatasetCatalog(object):
     DATA_DIR = "datasets"
     DATASETS = {
+        "Kaggle_train": {
+            "dataset_dir": "/mnt/bigdisk/datasets/kaggle_6dvnet_compatible/train_images"
+        },
+        "Kaggle_test": {
+            "dataset_dir": "/mnt/bigdisk/datasets/kaggle_6dvnet_compatible/test_images"
+        },
         "Apollo_3d_car_train": {
             "dataset_dir": "/media/SSD_1TB/ApolloScape/ECCV2018_apollo/train",
         },
@@ -187,7 +193,14 @@ class DatasetCatalog(object):
                 factory='Pascal3D',
                 args=args,
             )
-
+        elif "Kaggle" in name:
+            attrs = DatasetCatalog.DATASETS[name]
+            args = dict(dataset_dir=attrs['dataset_dir'],
+                        list_flag=name.split('_')[-1])
+            return dict(
+                factory='Car3D',
+                args=args,
+            )
         raise RuntimeError("Dataset not available: {}".format(name))
 
 

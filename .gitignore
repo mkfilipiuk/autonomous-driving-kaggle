@@ -30,3 +30,7 @@ dist/
 /models
 
 *.png
+
+data/*
+!data/*.sh
+!data/*.cam
