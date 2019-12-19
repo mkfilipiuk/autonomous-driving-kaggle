@@ -1,6 +1,12 @@
-#  6 DoF estimation network
+##### Preparing Kaggle dataset for 6DVNET
+1. ``pip3 install kaggle``
+2. Kaggle > my account > generate API key > ``~/.kaggle/kaggle.json``
+3. ``cd data``
+4. ``bash get_kaggle_dataset_and_also_prepare_as_6dvnet.sh``
 
-## Based on Mask-RCNN
+##  6 DoF estimation network
+
+### Based on Mask-RCNN
 
 I am afraid that the current repo doesn't generate the winning solution of the ApolloScape 3D car Instance Understanding challenge.
 However, a very under-documented repo does have the winning solution code:
@@ -8,14 +14,14 @@ https://github.com/stevenwudi/ApolloScape_InstanceSeg
 
 Hope it helps
 
-## Dataset:
+### Dataset:
 
 - [Pascal3D+](http://cvgl.stanford.edu/projects/pascal3d.html)
 - [ApolloScape 3D Car Instance](http://apolloscape.auto/car_instance.html)
 - [Kitti](http://www.cvlibs.net/datasets/kitti/) 
 
 
-## Citation
+### Citation
 
 I would appreciate citation of the following paper if you find this repository helpful.
 
