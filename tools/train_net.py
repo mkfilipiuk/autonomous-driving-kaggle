@@ -103,6 +103,7 @@ def train(cfg, local_rank, distributed, use_tensorboard=False):
         device,
         checkpoint_period,
         arguments,
+        20,
         tensorboard_logdir,
         tensorboard_exp_name,
         use_tensorboard=use_tensorboard

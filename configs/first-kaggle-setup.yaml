@@ -29,14 +29,14 @@ MODEL:
     SHARE_BOX_FEATURE_EXTRACTOR: False
   MASK_ON: True
 DATASETS:
-  TRAIN: ("Kaggle_train",)
-  TEST: ("Kaggle_test",)
+  TRAIN: ("Apollo_3d_car_train",)
+  TEST: ("Apollo_3d_car_test",)
 DATALOADER:
   SIZE_DIVISIBILITY: 32
 SOLVER:
 
   WEIGHT_DECAY: 0.0001
   STEPS: (60000, 80000)
-  MAX_ITER: 90000
-  IMS_PER_BATCH: 6 #8
+  MAX_ITER: 4000
+  IMS_PER_BATCH: 4 #8
   BASE_LR: 0.01  # 0.02

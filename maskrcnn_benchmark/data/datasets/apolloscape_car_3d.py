@@ -71,7 +71,7 @@ class Car3D(torch.utils.data.Dataset):
         """
         if self.list_flag == "train":
             train_list_all = [line.rstrip('\n')[:-4] for line in open(os.path.join(self.dataset_dir, 'split', self.list_flag + '.txt'))]
-            train_list_delete = [line.rstrip('\n') for line in open(os.path.join(self.dataset_dir, 'split', 'Mesh_overlay_train_error _delete.txt'))]
+            train_list_delete = [line.rstrip('\n') for line in open(os.path.join(self.dataset_dir, 'split', 'Mesh_overlay_train_error_delete.txt'))]
             print("Train delete %d images" % len(train_list_delete))
 
             self.img_list_all = [x for x in train_list_all if x not in train_list_delete]
@@ -94,12 +94,18 @@ class Car3D(torch.utils.data.Dataset):
         logging.info('loading %d car models' % len(car_models.models))
         for model in car_models.models:
             model_dir = "/".join(self.dataset_dir.split("/")[:-1])+'/train'
-            car_model = os.path.join(model_dir, 'car_models', model.name+'.pkl')
-            # with open(car_model) as f:
-            #     self.car_models[model.name] = pkl.load(f)
-            #
-            # This is a python 3 compatibility
-            car_models_all[model.name] = pickle.load(open(car_model, "rb"), encoding='latin1')
+            # car_model = os.path.join(model_dir, 'car_models', model.name+'.pkl')
+            # # with open(car_model) as f:
+            # #     self.car_models[model.name] = pkl.load(f)
+            # #
+            # # This is a python 3 compatibility
+            # car_models_all[model.name] = pickle.load(open(car_model, "rb"), encoding='latin1')
+            # Loading from pickle had some issues, lets load from json
+            car_model = os.path.join(model_dir, 'car_models_json', model.name + '.json')
+            tmp = json.load(open(car_model, 'r'))
+            tmp['vertices'] = np.asarray(tmp['vertices'])
+            tmp['faces'] = np.asarray(tmp['faces'])
+            car_models_all[model.name] = tmp
             # fix the inconsistency between obj and pkl
             car_models_all[model.name]['vertices'][:, [0, 1]] *= -1
         return car_models_all

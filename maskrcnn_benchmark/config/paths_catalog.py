@@ -14,13 +14,13 @@ class DatasetCatalog(object):
             "dataset_dir": "/mnt/bigdisk/datasets/kaggle_6dvnet_compatible/test_images"
         },
         "Apollo_3d_car_train": {
-            "dataset_dir": "/media/SSD_1TB/ApolloScape/ECCV2018_apollo/train",
+            "dataset_dir": "/mnt/bigdisk/datasets/apollo_scapes/train"
         },
         "Apollo_3d_car_val": {
-            "dataset_dir": "/media/SSD_1TB/ApolloScape/ECCV2018_apollo/train",
+            "dataset_dir": "/mnt/bigdisk/datasets/apollo_scapes/train"
         },
         "Apollo_3d_car_test": {
-            "dataset_dir": "/media/SSD_1TB/ApolloScape/ECCV2018_apollo/test",
+            "dataset_dir": "/mnt/bigdisk/datasets/apollo_scapes/test"
         },
 
         "Pascal3d+_train": {"dataset_dir": "/mnt/bigdisk/datasets/PASCAL3D+_release1.1",},
