@@ -12,7 +12,7 @@ import argparse
 import os
 import matplotlib
 matplotlib.use("TkAgg")
-os.environ['CUDA_VISIBLE_DEVICES'] = '1, 2, 3'
+os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 #os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 import torch

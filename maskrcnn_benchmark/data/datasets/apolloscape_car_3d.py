@@ -38,7 +38,7 @@ class Car3D(torch.utils.data.Dataset):
         :return:
         """
         self.cfg = cfg.copy()
-        self.dataset_dir = dataset_dir
+        self.dataset_dir = "../../datasets/apollo_scapes/train"
         self.list_flag = list_flag
         self.transforms = transforms
         self.img_list_all = []
@@ -71,7 +71,7 @@ class Car3D(torch.utils.data.Dataset):
         """
         if self.list_flag == "train":
             train_list_all = [line.rstrip('\n')[:-4] for line in open(os.path.join(self.dataset_dir, 'split', self.list_flag + '.txt'))]
-            train_list_delete = [line.rstrip('\n') for line in open(os.path.join(self.dataset_dir, 'split', 'Mesh_overlay_train_error _delete.txt'))]
+            train_list_delete = [line.rstrip('\n') for line in open(os.path.join(self.dataset_dir, 'split', 'Mesh_overlay_train_error_delete.txt'))]
             print("Train delete %d images" % len(train_list_delete))
 
             self.img_list_all = [x for x in train_list_all if x not in train_list_delete]
@@ -94,12 +94,14 @@ class Car3D(torch.utils.data.Dataset):
         logging.info('loading %d car models' % len(car_models.models))
         for model in car_models.models:
             model_dir = "/".join(self.dataset_dir.split("/")[:-1])+'/train'
-            car_model = os.path.join(model_dir, 'car_models', model.name+'.pkl')
-            # with open(car_model) as f:
-            #     self.car_models[model.name] = pkl.load(f)
-            #
+            car_model = os.path.join(model_dir, 'car_models_json', model.name+'.json')
+            with open(car_model) as json_file:
+                data = json.load(json_file)
+                vertices = np.array(data['vertices'])
+                faces = np.array(data['faces']) - 1
+#
             # This is a python 3 compatibility
-            car_models_all[model.name] = pickle.load(open(car_model, "rb"), encoding='latin1')
+            car_models_all[model.name] = {'vertices': vertices, 'faces': faces}
             # fix the inconsistency between obj and pkl
             car_models_all[model.name]['vertices'][:, [0, 1]] *= -1
         return car_models_all

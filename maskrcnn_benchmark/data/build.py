@@ -44,6 +44,7 @@ def build_dataset(cfg, dataset_list, transforms, dataset_catalog, is_train=True)
             args["training"] = is_train
         args["transforms"] = transforms
         # make dataset from factory
+        print(args)
         dataset = factory(**args)
         datasets.append(dataset)
 
