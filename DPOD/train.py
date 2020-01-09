@@ -5,7 +5,7 @@ import numpy as np
 
 from torch.utils.data import DataLoader
 from torch.optim import Adam
-from torch.nn import BCELoss
+from torch.nn import BCELoss, BCEWithLogitsLoss
 from tqdm import tqdm
 
 from datasets import make_dataset
@@ -19,11 +19,11 @@ def parse_args():
                         help='Name of dataset to train on.')
     parser.add_argument('--batch-size', default=2, dest="batch_size",
                         type=int)
-    parser.add_argument('--workers', default=1, help='Number of workers to use while loading data.')
+    parser.add_argument('--workers', default=1, type=int, help='Number of workers to use while loading data.')
     parser.add_argument('-lr', '--learning_rate', default=1e-4, dest="learning_rate", help='Learning rate of optimizer.')
     parser.add_argument('--val_size', type=float, default=0.25,
                         help='Validation size as percentage of dataset.')
-    parser.add_argument('--epochs', help="Number of epochs of training", type=int)
+    parser.add_argument('--epochs', help="Number of epochs of training", default=20, type=int)
 
     return parser.parse_args()
 
@@ -59,7 +59,7 @@ def train(args, model, device):
         drop_last=True,
     )
 
-    criterion = BCELoss()
+    criterion = BCEWithLogitsLoss()
     optimizer = Adam(model.parameters(), lr=args.learning_rate)
 
     for e in range(args.epochs):
@@ -69,9 +69,9 @@ def train(args, model, device):
             targets = [t.to(device) for t in targets]
             optimizer.zero_grad()
             preds = model(images)
-            loss = criterion(preds[0], targets[0]).mean()
-            loss += criterion(preds[1], targets[1]).mean()
-            loss += criterion(preds[2], targets[2]).mean()
+            loss = criterion(preds[0], targets[0])
+            loss += criterion(preds[1], targets[1])
+            loss += criterion(preds[2], targets[2])
             loss.backward()
             mean_loss += loss.item()
             optimizer.step()
@@ -86,9 +86,9 @@ def train(args, model, device):
             targets = [t.to(device) for t in targets]
             preds = model(images)
             class_loss, u_loss = wise_loss(preds, targets)
-            loss = criterion(preds[0], targets[0]).mean()
-            loss += criterion(preds[1], targets[1]).mean()
-            loss += criterion(preds[2], targets[2]).mean()
+            loss = criterion(preds[0], targets[0])
+            loss += criterion(preds[1], targets[1])
+            loss += criterion(preds[2], targets[2])
             mean_loss += loss.item()
             mean_class_loss += class_loss.mean().item()
             mean_u_loss += class_loss.mean().item()
@@ -107,7 +107,7 @@ def main():
     np.random.seed(42)
     args = parse_args()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = DPOD().to(device)
+    model = DPOD(image_size=(3384//8, 2710//8)).to(device)
     train(args, model, device)
 
 
