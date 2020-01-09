@@ -9,6 +9,12 @@ import cv2
 
 from PIL import Image
 
+
+# def resize_dataset(path, image_size):
+#     train_images_dir = os.path.join(path, "train_images")
+#     new_tri_dir = os.path.join(os.path.dirname, os.path.basename 
+
+
 class KaggleImageMaskDataset(Dataset):
     """
     This class prepares masks for training
