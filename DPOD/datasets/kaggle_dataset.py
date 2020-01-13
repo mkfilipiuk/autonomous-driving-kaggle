@@ -49,7 +49,7 @@ class KaggleImageMaskDataset(Dataset):
             transforms.Resize(image_size, Image.NEAREST),
             transforms.ToTensor(),
         ])
-        # TODO make sure alll values in target are integers
+
 
     def __len__(self):
         return len(self.images_ID)
@@ -72,19 +72,20 @@ class KaggleImageMaskDataset(Dataset):
         mask_name = os.path.join(self.masks_dir, self.images_ID[idx]+".npy")
         masks = np.load(mask_name)
         masks = self.target_transform(masks)
+        masks = masks.type(torch.LongTensor)
 
-        classification = np.zeros((self.num_of_models + 1, masks.shape[1], masks.shape[2]), dtype=np.float32)
-        for i in range(-1, self.num_of_models):
-            if i == -1:
-                classification[self.num_of_models][masks[0] == -1] = 1
-            else:
-                classification[i][masks[0] == i] = 1
+        # classification = np.zeros((self.num_of_models + 1, masks.shape[1], masks.shape[2]), dtype=np.float32)
+        # for i in range(-1, self.num_of_models):
+        #     if i == -1:
+        #         classification[self.num_of_models][masks[0] == -1] = 1
+        #     else:
+        #         classification[i][masks[0] == i] = 1
 
-        correspondence_u = np.zeros((self.num_of_colors, masks.shape[1], masks.shape[2]), dtype=np.float32)
-        correspondence_v = np.zeros((self.num_of_colors, masks.shape[1], masks.shape[2]), dtype=np.float32)
-        for i in range(self.num_of_colors):
-            correspondence_u[i][masks[1] == i] = 1
-            correspondence_v[i][masks[2] == i] = 1
+        # correspondence_u = np.zeros((self.num_of_colors, masks.shape[1], masks.shape[2]), dtype=np.float32)
+        # correspondence_v = np.zeros((self.num_of_colors, masks.shape[1], masks.shape[2]), dtype=np.float32)
+        # for i in range(self.num_of_colors):
+        #     correspondence_u[i][masks[1] == i] = 1
+        #     correspondence_v[i][masks[2] == i] = 1
 
         prediction_string = self.predition_strings[idx]
 
@@ -93,4 +94,4 @@ class KaggleImageMaskDataset(Dataset):
         # correspondence_u = self.target_transform(correspondence_u)
         # correspondence_v = self.target_transform(correspondence_v)
         
-        return image, (classification, correspondence_u, correspondence_v), prediction_string
+        return image, (masks[0], masks[1], masks[2]), prediction_string

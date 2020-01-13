@@ -1,7 +1,7 @@
 import torch
 
 from torch import nn
-from torchvision.models import resnet34
+from torchvision.models import resnet34, resnet18
 
 
 class DPOD(nn.Module):
@@ -9,6 +9,15 @@ class DPOD(nn.Module):
     def __init__(self, pretrained=True, num_classes=79+1, num_colors=256, **kwargs):
         super().__init__()
         self.encoder = nn.Sequential(*list(resnet34(pretrained=pretrained).children())[:-3])
+        
+        # Freeze first five layers
+        ct = 0
+        for _, c in self.encoder.named_children():
+            if ct < 5:
+                for param in c.parameters():
+                    param.requires_grad = False
+            ct += 1
+
         intermediate_activations = []
         self.intermediate_activations = intermediate_activations
 
@@ -58,11 +67,11 @@ class DecoderHead(nn.Module):
         self.ups3 = nn.Upsample(size=self.inter_sizes[2], mode='bilinear')
         self.ups4 = nn.Upsample(size=image_size, mode='bilinear')
         
-        self.conv1 = nn.Conv2d(256 + 128, 128, kernel_size=(3, 3), padding=(1, 1))  # padding
-        self.conv2 = nn.Conv2d(128 + 64, 64, kernel_size=(3, 3), padding=(1, 1)) # padding
-        self.conv3 = nn.Conv2d(64 + 64, 64, kernel_size=(3, 3), padding=(1, 1))  # padding
-        self.conv4 = nn.Conv2d(64, 64, kernel_size=(3, 3), padding=(1, 1))  # padding
-        self.conv5 = nn.Conv2d(64, num_classes, kernel_size=(3, 3), padding=(1, 1))  # padding
+        self.conv1 = nn.Conv2d(256 + 128, 128, kernel_size=(3, 3), padding=(1, 1))
+        self.conv2 = nn.Conv2d(128 + 64, 64, kernel_size=(3, 3), padding=(1, 1))
+        self.conv3 = nn.Conv2d(64 + 64, 64, kernel_size=(3, 3), padding=(1, 1))
+        self.conv4 = nn.Conv2d(64, 64, kernel_size=(3, 3), padding=(1, 1))
+        self.conv5 = nn.Conv2d(64, num_classes, kernel_size=(3, 3), padding=(1, 1))
 
         self.ups_layers = [self.ups1, self.ups2, self.ups3]
         self.conv_layers = [self.conv1, self.conv2, self.conv3]
@@ -77,4 +86,5 @@ class DecoderHead(nn.Module):
         features = self.conv4(features)
         features = self.conv5(features)
         return features
+
 
