@@ -10,11 +10,6 @@ import cv2
 from PIL import Image
 
 
-# def resize_dataset(path, image_size):
-#     train_images_dir = os.path.join(path, "train_images")
-#     new_tri_dir = os.path.join(os.path.dirname, os.path.basename 
-
-
 class KaggleImageMaskDataset(Dataset):
     """
     This class prepares masks for training
@@ -38,7 +33,6 @@ class KaggleImageMaskDataset(Dataset):
         self.num_of_colors = num_of_colors
         self.num_of_models = num_of_models
         self.im_transform = transforms.Compose([
-            # transforms.ToPILImage(),
             transforms.Resize(image_size, Image.NEAREST),
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.485, 0.456, 0.406],
@@ -60,11 +54,6 @@ class KaggleImageMaskDataset(Dataset):
 
         img_name = os.path.join(self.images_dir, self.images_ID[idx]+".jpg")
         image = Image.open(img_name)
-        # image.convert("RGB")
-        # image = np.array(image)
-        # image = image.reshape((image.shape[2], image.shape[0], image.shape[1]))
-        # image = image.astype("float32")
-        # image /= 256
 
         if not self.is_train:
             return image
@@ -74,24 +63,8 @@ class KaggleImageMaskDataset(Dataset):
         masks = self.target_transform(masks)
         masks = masks.type(torch.LongTensor)
 
-        # classification = np.zeros((self.num_of_models + 1, masks.shape[1], masks.shape[2]), dtype=np.float32)
-        # for i in range(-1, self.num_of_models):
-        #     if i == -1:
-        #         classification[self.num_of_models][masks[0] == -1] = 1
-        #     else:
-        #         classification[i][masks[0] == i] = 1
-
-        # correspondence_u = np.zeros((self.num_of_colors, masks.shape[1], masks.shape[2]), dtype=np.float32)
-        # correspondence_v = np.zeros((self.num_of_colors, masks.shape[1], masks.shape[2]), dtype=np.float32)
-        # for i in range(self.num_of_colors):
-        #     correspondence_u[i][masks[1] == i] = 1
-        #     correspondence_v[i][masks[2] == i] = 1
-
         prediction_string = self.predition_strings[idx]
 
         image = self.im_transform(image)
-        # classification = self.target_transform(classification)
-        # correspondence_u = self.target_transform(correspondence_u)
-        # correspondence_v = self.target_transform(correspondence_v)
         
         return image, (masks[0], masks[1], masks[2]), prediction_string
