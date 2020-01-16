@@ -119,8 +119,8 @@ def pnp_ransac_no_class(class_, color_u, color_v, downscaling, models_handler, n
     if not np.logical_and(class_ >= 0, class_ < num_of_models).any():
         return []
 
-    # Step 1 # Assuming 255 is background
-    binary_mask = (color_u < 255) | (color_v < 255)
+    # Step 1 # Assuming 0 is background - this was checked (see ModelsHandler.make_mask_from_kaggle_string)
+    binary_mask = (color_u > 0) | (color_v > 0)
 
     # Step 2
     frequencies = np.bincount(class_[binary_mask])
@@ -150,9 +150,9 @@ def pnp_ransac_no_class(class_, color_u, color_v, downscaling, models_handler, n
         model_id, trans, rot, downscaling
     )
 
-    color_u[overlay[..., 0] != color_not_to_be_colored] = 255  # todo: warto by dodać otoczkę jeszcze
-    color_v[overlay[..., 0] != color_not_to_be_colored] = 255
-    return [result] + pnp_ransac_no_class(
+    color_u[overlay[..., 0] != color_not_to_be_colored] = 0  # todo: warto by dodać otoczkę jeszcze
+    color_v[overlay[..., 0] != color_not_to_be_colored] = 0
+    return [best_result] + pnp_ransac_no_class(
         class_, color_u, color_v,
         downscaling, models_handler, num_of_models, min_inliers=min_inliers, k=k)
     
