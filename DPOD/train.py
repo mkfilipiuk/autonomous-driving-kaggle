@@ -22,7 +22,7 @@ def parse_args():
     parser.add_argument('--batch-size', default=2, dest="batch_size",
                         type=int)
     parser.add_argument('--workers', default=1, type=int, help='Number of workers to use while loading data.')
-    parser.add_argument('-lr', '--learning_rate', default=1e-4, dest="learning_rate", help='Learning rate of optimizer.')
+    parser.add_argument('-lr', '--learning_rate', default=3e-4, dest="learning_rate", help='Learning rate of optimizer.')
     parser.add_argument('--val_size', type=float, default=0.25,
                         help='Validation size as percentage of dataset.')
     parser.add_argument('--epochs', help="Number of epochs of training", default=20, type=int)
@@ -72,7 +72,7 @@ def train(args, model, device):
     scores = pd.DataFrame(columns="epoch train_loss val_loss val_accuracy val_u_channel val_v_channel".split())
     class_criterion = CrossEntropyLoss(weight=weights)
     other_criterion = CrossEntropyLoss()
-    optimizer = Adam(model.parameters(), lr=args.learning_rate)
+    optimizer = Adam(model.parameters(), lr=args.learning_rate, weight_decay=1e-4)
 
     for e in range(args.epochs):
         mean_loss = 0

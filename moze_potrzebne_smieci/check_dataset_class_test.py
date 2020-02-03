@@ -9,16 +9,13 @@ import time
 from torchvision.transforms import ToPILImage
 
 
-def main(kaggle_dataset_dir_path, inferenced_test_data_path="test_output",  show=False, save=False):
+def main(kaggle_dataset_dir_path, inferenced_test_data_path="../test_output",  show=False, save=False):
 
     dataset = KaggleImageMaskDataset(kaggle_dataset_dir_path, is_train=False)
     models_handler = ModelsHandler(kaggle_dataset_dir_path)
 
-    if save:
-        output_dir = f"sanity_checks_test/{time.strftime('%Y.%m.%dT%H:%M')}"
-        os.makedirs(output_dir, exist_ok=True)
-
-    for i, id_ in enumerate(dataset.get_IDs()):
+    print(inferenced_test_data_path)
+    for i, id_ in enumerate(sorted([f[:-4] for f in os.listdir(inferenced_test_data_path) if f[-4:] == ".npy"])):
         # load
         image = dataset[i]
 
@@ -39,10 +36,12 @@ def main(kaggle_dataset_dir_path, inferenced_test_data_path="test_output",  show
         plt.tight_layout()
 
         if save:
-            plt.savefig(f'{output_dir}/check_test-{id_}.jpg')
+            plt.savefig(f'output_dir/check_test-{id_}.jpg')
 
         if show:
             plt.show()
+        
+        plt.close()
 
 
 if __name__ == '__main__':
@@ -54,4 +53,4 @@ if __name__ == '__main__':
     arg_parser.add_argument('--save', action='store_true', help='save produced visualizations in sanity_checks')
 
     args = arg_parser.parse_args()
-    main(args.kaggle_dataset_dir_path, args.show, args.save)
+    main(args.kaggle_dataset_dir_path, args.inferenced_test_data_path, args.show, args.save)

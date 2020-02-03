@@ -19,21 +19,21 @@ from instances2submission import make_submission_from_ransac_directory
 from mAP import calculate_loss_of_prediction
 
 
-class JustImageDataset(Dataset):
+# class JustImageDataset(Dataset):
 
-    def __init__(self, kaggle_validation):
-        super().__init__()
-        self.kaggle_validation = kaggle_validation
+#     def __init__(self, kaggle_validation):
+#         super().__init__()
+#         self.kaggle_validation = kaggle_validation
 
-    def __len__(self):
-        return len(self.kaggle_validation)
+#     def __len__(self):
+#         return len(self.kaggle_validation)
 
-    def __getitem__(self, index):
-        image, _, _ = self.kaggle_validation[index]
-        return image
+#     def __getitem__(self, index):
+#         image, _, _ = self.kaggle_validation[index]
+#         return image
 
-    def get_IDs(self):
-        return self.kaggle_validation.get_IDs()
+#     def get_IDs(self):
+#         return self.kaggle_validation.get_IDs()
 
 
 def main(args):
@@ -41,8 +41,7 @@ def main(args):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # prepare dataset
-    val_data = KaggleImageMaskDataset(PATHS['kaggle'], setup="val")
-    val_data = JustImageDataset(val_data)
+    val_data = KaggleImageMaskDataset(PATHS['kaggle'], setup="test")
 
     # load correspondence block
     model = DPOD(image_size=(2710 // 8, 3384 // 8))
@@ -63,7 +62,7 @@ def main(args):
     print("Infering masks")
     infer_masks(model, val_data, args.path_to_masks_dir, args.debug, device)
 
-    masks_paths = glob(f'{args.path_to_masks_dir}/*.npy')  # locate masks to process further
+    masks_paths = [os.path.join(args.path_to_masks_dir, name + ".npy") for name in val_data.get_IDs()] # locate masks to process further
 
     print("Applying ransac")
     apply_ransac(masks_paths, ransac_block, args.path_to_outputs_dir, args.debug)
@@ -77,9 +76,6 @@ def main(args):
         args.path_to_outputs_dir,
         path_to_submission_file
     )
-    loss = calculate_loss_of_prediction(path_to_submission_file, os.path.join(PATHS['kaggle'], "train.csv"))
-    print("Loss")
-    pprint(loss)
 
 
 if __name__ == "__main__":

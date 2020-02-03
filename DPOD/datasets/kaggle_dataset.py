@@ -34,8 +34,6 @@ class KaggleImageMaskDataset(Dataset):
         self.is_train = is_train
         self.image_size = image_size
         self.frequency_path = os.path.join(path, "frequency.npy")
-        self.images_dir = os.path.join(path, "train_images" if is_train else "test_images")
-        self.masks_dir = os.path.join(path, "train_targets" if is_train else "test_targets")
         # This ifs result from backward compatibility
         if setup is not None:
             if setup == "train":
@@ -50,6 +48,8 @@ class KaggleImageMaskDataset(Dataset):
                 raise AttributeError(f"No such setup: {setup}")
         setup = "all" if setup is None else setup
             
+        self.images_dir = os.path.join(path, "train_images" if self.is_train else "test_images")
+        self.masks_dir = os.path.join(path, "train_targets" if self.is_train else "test_targets")
         if self.is_train:
             data_csv = pd.read_csv(os.path.join(path, "train.csv"))
             self.images_ID = data_csv.ImageId
@@ -63,7 +63,7 @@ class KaggleImageMaskDataset(Dataset):
                 self.prediction_strings = self.prediction_strings[:edge]
             self.prediction_strings = list(self.prediction_strings)
         else:
-            self.images_ID = [x[:-4] for x in os.listdir(os.path.join(path, "test_images"))]
+            self.images_ID = sorted([x[:-4] for x in os.listdir(os.path.join(path, "test_images"))])
             self.prediction_strings = None
         self.images_ID = list(self.images_ID)
 

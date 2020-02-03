@@ -41,7 +41,7 @@ def infer_masks(model, dataset, path_to_output_dir, debug=False, device="cpu"):
     skipped = 0
     print(len(dataset.get_IDs()))
     with torch.no_grad():
-        for n_image, images in enumerate(tqdm(data_loader)):
+        for n_image in trange(len(dataset)):
             if n_image >= n_images_to_process:
                 break
             
@@ -56,6 +56,9 @@ def infer_masks(model, dataset, path_to_output_dir, debug=False, device="cpu"):
                 continue
             
             #images = data_loader[n_image] tak nie można
+            # chcę zrobić cokolwiek, żeby omijanie obrazków przyśpieszało, bo preprocessing zajmuje lata
+            images = dataset[n_image]
+            images = images.view(1, images.shape[0], images.shape[1], images.shape[2])
             images = images.to(device)
 
             class_mask, u_channel, v_channel = model(images)
