@@ -65,3 +65,16 @@ optional arguments:
   --flags FLAGS                          RANSAC parameter
 
 ```
+## Evaluation
+```
+usage: linemod_evaluate.py [-h] [--linemod_dir_path LINEMOD_DIR_PATH]
+
+calcutates mean accuracy on validaiton split of LINEMOD dataset
+
+positional arguments:
+  path_to_instances_dir path to directory containing predicted isntances
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --linemod_dir_path LINEMOD_DIR_PATH path to directory containing linemod dataset
+```
